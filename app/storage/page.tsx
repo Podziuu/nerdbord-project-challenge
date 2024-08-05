@@ -25,13 +25,13 @@ export default async function ProtectedPage() {
         </div>
       </nav>
 
-      <div className="flex-1 flex flex-col gap-20 max-w-4xl px-3">
-        <main className="flex-1 flex flex-col gap-6">
+      <div className="flex-1 flex flex-col gap-4 max-w-4xl px-3 w-full items-center">
+        {/* <main className="flex-1 flex flex-col gap-6 w-full"> */}
           <h2 className="text-xl font-bold">Upload a photo</h2>
           <FileUpload />
           {!error && <FileGallery files={data} />}
           {error && <p>Error while loading files, please try again later.</p>}
-        </main>
+        {/* </main> */}
       </div>
 
       <footer className="w-full border-t border-t-foreground/10 p-8 flex justify-center text-center text-xs">
