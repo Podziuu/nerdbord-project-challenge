@@ -17,7 +17,6 @@ const FileUpload = () => {
     e.preventDefault();
     if (fileRef.current && fileRef.current.files) {
       const file = fileRef.current.files[0];
-      console.log(file);
       if (file.size > 1024 * 1024 * 10) {
         alert("File is too big");
       }
