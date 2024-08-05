@@ -2,6 +2,7 @@ import LoginButton from "@/components/LoginButton";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import FileUpload from "@/components/FileUpload";
+import FileGallery from "@/components/FileGallery";
 
 export default async function ProtectedPage() {
   const supabase = createClient();
@@ -14,6 +15,8 @@ export default async function ProtectedPage() {
     return redirect("/login");
   }
 
+  const {data, error} = await supabase.storage.from(user.id).list('public');
+
   return (
     <div className="flex-1 w-full flex flex-col gap-20 items-center">
       <nav className="w-full flex justify-end border-b border-b-foreground/10 h-16">
@@ -24,8 +27,10 @@ export default async function ProtectedPage() {
 
       <div className="flex-1 flex flex-col gap-20 max-w-4xl px-3">
         <main className="flex-1 flex flex-col gap-6">
-          <h2>Upload a file</h2>
+          <h2 className="text-xl font-bold">Upload a photo</h2>
           <FileUpload />
+          {!error && <FileGallery files={data} />}
+          {error && <p>Error while loading files, please try again later.</p>}
         </main>
       </div>
 

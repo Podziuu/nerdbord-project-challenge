@@ -2,11 +2,16 @@
 import { useRef, FormEvent } from "react";
 
 import { createClient } from "@/utils/supabase/client";
+import { revalidatePath } from "next/cache";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const FileUpload = () => {
   const supabase = createClient();
 
   const fileRef = useRef<HTMLInputElement>(null);
+  const path = usePathname();
+  const router = useRouter();
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
@@ -15,7 +20,7 @@ const FileUpload = () => {
       if (file.size > 1024 * 1024 * 10) {
         alert("File is too big");
       }
-      if (file.type !== "image/jpeg" && file.type !== "image/png") {
+      if (file.type !== "image/jpeg" && file.type !== "image/png" && file.type !== "text/plain") {
         alert("File type not supported");
         return;
       }
@@ -33,16 +38,17 @@ const FileUpload = () => {
         alert(error);
         return;
       }
+      router.refresh();
     }
   };
 
   return (
-    <form onSubmit={submitHandler}>
-      <label>
+    <form onSubmit={submitHandler} className="flex flex-col gap-y-4">
+      <label className="space-x-8">
         <span>File</span>
         <input type="file" ref={fileRef} />
       </label>
-      <button>Upload</button>
+      <button className="bg-green-700 px-4 py-2 rounded-lg">Upload</button>
     </form>
   );
 };
