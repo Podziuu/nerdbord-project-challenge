@@ -12,7 +12,6 @@ const FileGallery = ({ files }: any) => {
 
   const downloadHandler = async (e: any) => {
     e.preventDefault();
-    console.log(e);
     const fileId = e.target.id;
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError) {
@@ -20,11 +19,10 @@ const FileGallery = ({ files }: any) => {
       return;
     }
     const user = userData.user.id;
+    // Supabase check if you have permission to download the file
     const { data, error } = await supabase.storage
       .from(user)
       .download(`public/${fileId}`);
-
-    console.log(data, error);
 
     if (error) {
       console.error("Error downloading file:", error.message);
