@@ -2,6 +2,7 @@
 
 import { createClient } from "@/utils/supabase/client";
 import { filesize } from "filesize";
+import { useRouter } from "next/navigation";
 
 const FileGallery = ({ files }: any) => {
   if (!files || files.length === 0) {
@@ -9,6 +10,7 @@ const FileGallery = ({ files }: any) => {
   }
 
   const supabase = createClient();
+  const router = useRouter();
 
   const downloadHandler = async (e: any) => {
     e.preventDefault();
@@ -41,6 +43,29 @@ const FileGallery = ({ files }: any) => {
     document.body.removeChild(a);
   };
 
+  const deleteHandler = async (e: any) => {
+    e.preventDefault();
+    const fileId = e.target.id;
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError) {
+      alert(userError);
+      return;
+    }
+    const user = userData.user.id;
+    // Supabase check if you have permission to remove the file
+    const { data, error } = await supabase.storage
+      .from(user)
+      .remove([`public/${fileId}`]);
+
+    if (error) {
+      console.error("Error removing file:", error.message);
+      alert("Error removing file");
+      return;
+    }
+
+    router.refresh();
+  }
+
   return (
     <div className="w-full">
       {files.map((file: any) => {
@@ -52,7 +77,7 @@ const FileGallery = ({ files }: any) => {
               <button onClick={downloadHandler} id={file.name}>
                 Download
               </button>
-              <button>Delete</button>
+              <button onClick={deleteHandler} id={file.name} >Delete</button>
             </div>
           </div>
         );
