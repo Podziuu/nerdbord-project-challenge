@@ -43,7 +43,7 @@ const FileUpload = () => {
   };
 
   return (
-    <form onSubmit={submitHandler} className="flex flex-col gap-y-4">
+    <form onSubmit={submitHandler} className="flex flex-col gap-y-4 max-w-xl">
       <label className="space-x-8">
         <span>File</span>
         <input type="file" ref={fileRef} />
